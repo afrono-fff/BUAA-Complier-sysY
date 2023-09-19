@@ -213,20 +213,23 @@ public class LexicalAnalyzer {
         int scanP = position; // 记录position
         position = 0; // 位置指针移到source开头
         while(position < sourceLen){
-            System.out.print(next().toString());
+            wordList.add(next());
         }
         position = scanP;
     }
-    public boolean charIsIdent(char ch){
+    public void printToFile(){
+        if(wordList.isEmpty())return;
+        for (Word word: wordList){
+            System.out.print(word);
+        }
+    }
+    private boolean charIsIdent(char ch){
         return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_';
     }
-    public boolean charIsDigit(char ch){
+    private boolean charIsDigit(char ch){
         return ch >= '0' && ch <= '9';
     }
-    public boolean charIsOp(char ch){
-        return ch == '!' || ch == '&' || ch == '|' || ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%' || ch == '<' || ch == '>' || ch == '=' || ch == ';' || ch == ',' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '[' || ch == ']';
-    }
-    public boolean isReserve(String token){
+    private boolean isReserve(String token){
         return reservedWords.containsKey(token);
     }
 }

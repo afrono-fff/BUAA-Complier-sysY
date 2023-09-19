@@ -1,7 +1,5 @@
 package LexicalAnalyse;
 
-import javax.swing.*;
-
 public class Word {
     private LexicalType type; //单词类型码
     private String token; //单词值
