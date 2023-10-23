@@ -1,5 +1,9 @@
 package LexicalAnalyse;
 
+import ErrorHandle.ErrorHandler;
+import ErrorHandle.ErrorType;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,6 +16,7 @@ public class LexicalAnalyzer {
     private LexicalType type; //当前type
     private ArrayList<Word> wordList; //单词表
     private static final HashMap<String, LexicalType> reservedWords = new HashMap<>();
+    private static final ErrorHandler errorHandler = ErrorHandler.getInstance();
     //保留字表
     static {
         //静态代码区初始化static final的HashMap
@@ -54,7 +59,8 @@ public class LexicalAnalyzer {
         }
         if(charIsIdent(readChar)){ // 标识符和保留字
             token += readChar;
-            while(position < sourceLen && (charIsIdent(source.charAt(position)) || charIsDigit(source.charAt(position)))){
+            while(position < sourceLen && (charIsIdent(source.charAt(position)) ||
+                    charIsDigit(source.charAt(position)))){
                 readChar = source.charAt(position++);
                 token += readChar;
             }
@@ -69,7 +75,7 @@ public class LexicalAnalyzer {
                 readChar = source.charAt(position++);
                 token += readChar;
             }
-            return new Number(LexicalType.INTCON,token,line,Integer.parseInt(token));
+            return new Number(LexicalType.INTCON,token,line);
         }else if(readChar == '/'){ // 注释
             token += readChar;
             if(position < sourceLen && source.charAt(position) == '/'){ // 单行注释，第二个'/'
@@ -113,6 +119,15 @@ public class LexicalAnalyzer {
         }else if(readChar == '"'){
             token += readChar;
             while(position < sourceLen && source.charAt(position) != '"'){
+                if(!(source.charAt(position) == '%' || source.charAt(position) == 32 || source.charAt(position) == 33 || (source.charAt(position) >= 40 && source.charAt(position) <= 126))){
+                    // 格式字符串非法字符
+                }else if(source.charAt(position) == 92){
+                    if(source.charAt(position + 1) != 'n'){
+                        // 格式字符串非法字符（'\'单独出现）
+                    }
+                }else if(source.charAt(position) == '%'){
+                    //格式字符
+                }
                 readChar = source.charAt(position++);
                 token += readChar;
             }
@@ -215,7 +230,11 @@ public class LexicalAnalyzer {
         while(position < sourceLen){
             wordList.add(next());
         }
-        position = scanP;
+        position = scanP; // 位置指针回归原位
+    }
+    public ArrayList<Word> getWordList(){
+        if(!wordList.isEmpty())return this.wordList;
+        return null;
     }
     public void printToFile(){
         if(wordList.isEmpty())return;

@@ -11,6 +11,17 @@ public class Word {
         this.line = line;
     }
 
+    public LexicalType getType(){
+        return this.type;
+    }
+    public  String getToken(){
+        return this.token;
+    }
+
+    public int getLine() {
+        return this.line;
+    }
+
     @Override
     public String toString() {
         if(this.type != LexicalType.NONE){
