@@ -6,6 +6,11 @@ public class ConstExp{
     public ConstExp(AddExp addExp){
         this.addExp = addExp;
     }
+
+    public AddExp getAddExp() {
+        return addExp;
+    }
+
     public void printSyntax(){
         System.out.println("<ConstExp>");
     }

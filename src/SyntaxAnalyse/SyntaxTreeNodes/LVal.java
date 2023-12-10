@@ -21,7 +21,12 @@ public class LVal {
     public Word getIdent(){
         return ident;
     }
-    public int getDimension(){
+
+    public ArrayList<Exp> getExpList() {
+        return expList;
+    }
+
+    public int getDimension(){ // 例如声明a[][]=...,那么a[0]就是1维的
         VarSymbol vs;
         if((vs = (VarSymbol) SyntaxAnalyzer.searchSymbol(ident.getToken())) != null){
             return vs.getDimension() - expList.size(); // 变量（普通变量或数组变量）的dimension

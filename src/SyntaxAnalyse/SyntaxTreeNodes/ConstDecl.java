@@ -9,6 +9,15 @@ public class ConstDecl {
         this.bType = bType;
         this.constDefList = constDefList;
     }
+
+    public ArrayList<ConstDef> getConstDefList() {
+        return constDefList;
+    }
+
+    public BType getbType() {
+        return bType;
+    }
+
     public void printSyntax(){
         System.out.println("<ConstDecl>");
     }

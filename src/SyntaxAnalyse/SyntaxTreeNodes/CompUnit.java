@@ -16,4 +16,13 @@ public class CompUnit{ // 语法树根节点：编译单元
     public void printSyntax(){
         System.out.println("<CompUnit>");
     }
+    public ArrayList<Decl> getDeclList(){
+        return this.declList;
+    }
+    public ArrayList<FuncDef> getFuncDefList(){
+        return this.funcDefList;
+    }
+    public MainFuncDef getMainFuncDef(){
+        return this.mainFuncDef;
+    }
 }

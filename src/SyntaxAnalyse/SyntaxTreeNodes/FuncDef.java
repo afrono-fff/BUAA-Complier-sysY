@@ -2,6 +2,8 @@ package SyntaxAnalyse.SyntaxTreeNodes;
 
 import LexicalAnalyse.Word;
 
+import java.util.ArrayList;
+
 public class FuncDef {
     // FuncType Ident '(' [FuncFParams] ')' Block
     private FuncType funcType;
@@ -18,8 +20,25 @@ public class FuncDef {
         this.funcType = funcType;
         this.ident = ident;
         this.block = block;
-        this.funcFParams = null;
+        this.funcFParams = new FuncFParams(new ArrayList<>());
     }
+
+    public Word getIdent() {
+        return ident;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public FuncFParams getFuncFParams() {
+        return funcFParams;
+    }
+
+    public FuncType getFuncType() {
+        return funcType;
+    }
+
     public void printSyntax(){
         System.out.println("<FuncDef>");
     }

@@ -1,6 +1,7 @@
 package SyntaxAnalyse.SyntaxTreeNodes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Block {
     // Block → '{' { BlockItem } '}'
@@ -22,5 +23,8 @@ public class Block {
             return stmt.isReturnStmt();
         }
         return false;
+    }
+    public ArrayList<BlockItem> getBlockItemList(){
+        return blockItemList;
     }
 }

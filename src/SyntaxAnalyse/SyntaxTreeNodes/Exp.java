@@ -12,4 +12,8 @@ public class Exp {
     public int getDimension(){
         return addExp.getDimension();
     }
+
+    public AddExp getAddExp() {
+        return addExp;
+    }
 }

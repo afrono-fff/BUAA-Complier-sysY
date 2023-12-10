@@ -6,6 +6,11 @@ public class Cond {
     public Cond(LOrExp lOrExp){
         this.lOrExp = lOrExp;
     }
+
+    public LOrExp getlOrExp() {
+        return lOrExp;
+    }
+
     public void printSyntax(){
         System.out.println("<Cond>");
     }

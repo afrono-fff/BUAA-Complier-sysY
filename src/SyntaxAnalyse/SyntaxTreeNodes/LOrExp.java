@@ -9,6 +9,11 @@ public class LOrExp {
     public LOrExp(ArrayList<LAndExp> lAndExpList){
         this.lAndExpList = lAndExpList;
     }
+
+    public ArrayList<LAndExp> getlAndExpList() {
+        return lAndExpList;
+    }
+
     public void printSyntax(){
         System.out.println("<LOrExp>");
     }

@@ -32,4 +32,13 @@ public class SymbolTable {
     public HashMap<String,Symbol> getTable(){
         return table;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for(String key:table.keySet()){
+            str.append(table.get(key)).append("\n");
+        }
+        return str.toString();
+    }
 }

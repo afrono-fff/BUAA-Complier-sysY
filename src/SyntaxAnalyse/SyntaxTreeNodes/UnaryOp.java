@@ -8,6 +8,11 @@ public class UnaryOp {
     public UnaryOp(Word terminal){
         this.terminal = terminal;
     }
+
+    public Word getTerminal() {
+        return terminal;
+    }
+
     public void printSyntax(){
         System.out.println("<UnaryOp>");
     }

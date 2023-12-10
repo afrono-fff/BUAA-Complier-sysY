@@ -24,4 +24,7 @@ public class FuncFParams {
         }
         return dimensions;
     }
+    public FuncFParams copy(){
+        return new FuncFParams(this.funcFParamList);
+    }
 }

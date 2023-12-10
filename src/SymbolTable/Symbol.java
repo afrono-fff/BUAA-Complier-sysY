@@ -13,4 +13,7 @@ public class Symbol {
     public String getToken(){
         return token;
     }
+    public int getLayer(){
+        return layer;
+    }
 }

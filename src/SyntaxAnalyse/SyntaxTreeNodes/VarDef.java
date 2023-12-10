@@ -20,6 +20,19 @@ public class VarDef {
         this.constExpList = constExpList;
         this.initVal = null;
     }
+
+    public ArrayList<ConstExp> getConstExpList() {
+        return constExpList;
+    }
+
+    public Word getIdent() {
+        return ident;
+    }
+
+    public InitVal getInitVal() {
+        return initVal;
+    }
+
     public void printSyntax(){
         System.out.println("<VarDef>");
     }

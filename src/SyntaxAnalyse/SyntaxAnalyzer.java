@@ -179,30 +179,44 @@ public class SyntaxAnalyzer {
     private AddExp addExpRec(){ // addExp子程序
         // AddExp → MulExp { ('+' | '−') MulExp }
         ArrayList<MulExp> mulExpList = new ArrayList<>();
+        ArrayList<String> opList = new ArrayList<>();
         MulExp mulExp = mulExpRec();
         mulExpList.add(mulExp);
         while(sym.getType() == LexicalType.PLUS || sym.getType() == LexicalType.MINU){
-            System.out.println("<AddExp>"); // 这里格外注意，由于消除左递归导致的语法树缺失一层问题
+            if(sym.getType() == LexicalType.PLUS){
+                opList.add("plus");
+            }else{
+                opList.add("minu");
+            }
+            System.out.println("<AddExp>"); // 这里注意，由于消除左递归导致的语法树缺失一层问题
             getSym();
             MulExp mulExp1 = mulExpRec();
             mulExpList.add(mulExp1);
         }
-        AddExp ae = new AddExp(mulExpList);
+        AddExp ae = new AddExp(mulExpList, opList);
         ae.printSyntax();
         return ae;
     }
     private MulExp mulExpRec(){
         // MulExp → UnaryExp { ('*' | '/' | '%') UnaryExp }
         ArrayList<UnaryExp> unaryExpList = new ArrayList<>();
+        ArrayList<String> opList = new ArrayList<>();
         UnaryExp unaryExp = unaryExpRec();
         unaryExpList.add(unaryExp);
         while(sym.getType() == LexicalType.MULT || sym.getType() == LexicalType.DIV || sym.getType() == LexicalType.MOD){
+            if(sym.getType() == LexicalType.MULT){
+                opList.add("mult");
+            } else if(sym.getType() == LexicalType.DIV){
+                opList.add("div");
+            }else{
+                opList.add("mod");
+            }
             System.out.println("<MulExp>");
             getSym();
             UnaryExp unaryExp1 = unaryExpRec();
             unaryExpList.add(unaryExp1);
         }
-        MulExp me = new MulExp(unaryExpList);
+        MulExp me = new MulExp(unaryExpList, opList);
         me.printSyntax();
         return me;
     }
@@ -219,8 +233,9 @@ public class SyntaxAnalyzer {
             unaryExp = unaryExpRec();
             UnaryExp ue = new UnaryExp(unaryOp, unaryExp);
             ue.printSyntax();
+            ue.setUnaryExpType("signed");
             return ue;
-        }else if(sym.getType() == LexicalType.IDENFR && wordList.get(symPosition+1).getType() == LexicalType.LPARENT){
+        }else if((sym.getType() == LexicalType.IDENFR || sym.getType() == LexicalType.GETINTTK) && wordList.get(symPosition+1).getType() == LexicalType.LPARENT){
             // 第二种
             ident = sym;
             FuncSymbol fs = null;
@@ -247,6 +262,7 @@ public class SyntaxAnalyzer {
                 getSym();
                 UnaryExp ue = new UnaryExp(ident);
                 ue.printSyntax();
+                ue.setUnaryExpType("call");
                 return ue;
             }else if(sym.getType() != LexicalType.RPARENT && symNotFirstOfFuncRParams()){
                 // 未选FuncRParams，且')'缺失
@@ -261,6 +277,7 @@ public class SyntaxAnalyzer {
                 errorHandler.handleError(ErrorType.LackRParentError,errorLine);
                 UnaryExp ue = new UnaryExp(ident);
                 ue.printSyntax();
+                ue.setUnaryExpType("call");
                 return ue;
             }else {
                 funcRParams = funcRParamsRec();
@@ -289,6 +306,7 @@ public class SyntaxAnalyzer {
                 }
                 UnaryExp ue = new UnaryExp(ident, funcRParams);
                 ue.printSyntax();
+                ue.setUnaryExpType("call");
                 return ue;
             }
         }else {
@@ -296,6 +314,7 @@ public class SyntaxAnalyzer {
             primaryExp = primaryExpRec();
             UnaryExp ue = new UnaryExp(primaryExp);
             ue.printSyntax();
+            ue.setUnaryExpType("primary");
             return ue;
         }
     }
@@ -741,6 +760,7 @@ public class SyntaxAnalyzer {
             block = blockRec();
             Stmt s = new Stmt(block);
             s.printSyntax();
+            s.setStmtType("block");
             return s;
         }else if(sym.getType() == LexicalType.IFTK){ // 'if' '(' Cond ')' Stmt [ 'else' Stmt ]
             getSym(); // 已确定sym为'if'
@@ -760,10 +780,12 @@ public class SyntaxAnalyzer {
                     elseStmt = stmtRec();
                     Stmt s = new Stmt(cond, stmt, elseStmt);
                     s.printSyntax();
+                    s.setStmtType("branchWithElse");
                     return s;
                 }
                 Stmt s = new Stmt(cond, stmt);
                 s.printSyntax();
+                s.setStmtType("branchWithoutElse");
                 return s;
             }else {
                 // Exception
@@ -792,6 +814,7 @@ public class SyntaxAnalyzer {
                             isLoopStmt = false; // 退出循环的Stmt语句
                             Stmt s = new Stmt(forStmt1, cond, forStmt2, stmt);
                             s.printSyntax();
+                            s.setStmtType("loop");
                             return s;
                         }else {
                             // Exception
@@ -822,6 +845,11 @@ public class SyntaxAnalyzer {
             }
             Stmt s = new Stmt(forTerminal);
             s.printSyntax();
+            if(forTerminal.getType() == LexicalType.BREAKTK){
+                s.setStmtType("break");
+            }else{
+                s.setStmtType("continue");
+            }
             return s;
         }else if(sym.getType() == LexicalType.RETURNTK){ // 'return' [Exp] ';'
             errorLine = sym.getLine();
@@ -830,6 +858,7 @@ public class SyntaxAnalyzer {
                 getSym();
                 Stmt s = new Stmt();
                 s.printSyntax();
+                s.setStmtType("returnVoid");
                 s.setReturn(); // 错误处理g使用
                 return s;
             }else {
@@ -848,6 +877,7 @@ public class SyntaxAnalyzer {
                 }
                 Stmt s = new Stmt(exp);
                 s.printSyntax();
+                s.setStmtType("returnWithExp");
                 s.setReturn(); // 错误处理g使用
                 return s;
             }
@@ -888,6 +918,7 @@ public class SyntaxAnalyzer {
                     }
                     Stmt s = new Stmt(formatString, expList);
                     s.printSyntax();
+                    s.setStmtType("printf");
                     return s;
                 }
             }else {
@@ -932,6 +963,7 @@ public class SyntaxAnalyzer {
                     }
                     Stmt s = new Stmt(lVal);
                     s.printSyntax();
+                    s.setStmtType("assign_getint");
                     return s;
                 }else {
                     // Exception
@@ -948,6 +980,7 @@ public class SyntaxAnalyzer {
                 }
                 Stmt s = new Stmt(lVal, exp);
                 s.printSyntax();
+                s.setStmtType("assign");
                 return s;
             }
         }else { //  [Exp] ';'
@@ -955,6 +988,7 @@ public class SyntaxAnalyzer {
                 getSym();
                 Stmt s = new Stmt();
                 s.printSyntax();
+                s.setStmtType("exp");
                 return s;
             }else {
                 // 选择Exp
@@ -963,6 +997,7 @@ public class SyntaxAnalyzer {
                     getSym();
                     Stmt s = new Stmt(exp);
                     s.printSyntax();
+                    s.setStmtType("exp");
                     return s;
                 }else {
                     // TODO: error();
@@ -1011,30 +1046,46 @@ public class SyntaxAnalyzer {
     private EqExp eqExpRec(){
         // EqExp → RelExp { ('==' | '!=') RelExp }
         ArrayList<RelExp> relExpList = new ArrayList<>();
+        ArrayList<String> opList = new ArrayList<>();
         RelExp relExp = relExpRec();
         relExpList.add(relExp);
         while (sym.getType() == LexicalType.EQL || sym.getType() == LexicalType.NEQ){
+            if(sym.getType() == LexicalType.EQL){
+                opList.add("eq");
+            }else{
+                opList.add("ne");
+            }
             System.out.println("<EqExp>");
             getSym();
             RelExp relExp1 = relExpRec();
             relExpList.add(relExp1);
         }
-        EqExp ee = new EqExp(relExpList);
+        EqExp ee = new EqExp(relExpList, opList);
         ee.printSyntax();
         return ee;
     }
     private RelExp relExpRec(){
         // RelExp → AddExp { ('<' | '>' | '<=' | '>=') AddExp }
         ArrayList<AddExp> addExpList = new ArrayList<>();
+        ArrayList<String> opList = new ArrayList<>();
         AddExp addExp = addExpRec();
         addExpList.add(addExp);
         while (sym.getType() == LexicalType.LSS || sym.getType() == LexicalType.LEQ || sym.getType() == LexicalType.GRE || sym.getType() == LexicalType.GEQ){
+            if(sym.getType() == LexicalType.LSS){
+                opList.add("slt");
+            }else if(sym.getType() == LexicalType.LEQ){
+                opList.add("sle");
+            }else if(sym.getType() == LexicalType.GRE){
+                opList.add("sgt");
+            }else{
+                opList.add("sge");
+            }
             System.out.println("<RelExp>");
             getSym();
             AddExp addExp1 = addExpRec();
             addExpList.add(addExp1);
         }
-        RelExp re = new RelExp(addExpList);
+        RelExp re = new RelExp(addExpList, opList);
         re.printSyntax();
         return re;
     }

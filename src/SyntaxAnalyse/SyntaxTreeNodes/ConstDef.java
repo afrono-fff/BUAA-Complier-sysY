@@ -14,6 +14,19 @@ public class ConstDef {
         this.constExpList = constExpList;
         this.constInitVal = constInitVal;
     }
+
+    public Word getIdent() {
+        return ident;
+    }
+
+    public ArrayList<ConstExp> getConstExpList() {
+        return constExpList;
+    }
+
+    public ConstInitVal getConstInitVal() {
+        return constInitVal;
+    }
+
     public void printSyntax(){
         System.out.println("<ConstDef>");
     }

@@ -8,6 +8,15 @@ public class ForStmt {
         this.lVal = lVal;
         this.exp = exp;
     }
+
+    public Exp getExp() {
+        return exp;
+    }
+
+    public LVal getlVal() {
+        return lVal;
+    }
+
     public void printSyntax(){
         System.out.println("<ForStmt>");
     }

@@ -40,4 +40,16 @@ public class PrimaryExp {
             return 0;
         }
     }
+
+    public Exp getExp() {
+        return exp;
+    }
+
+    public LVal getlVal() {
+        return lVal;
+    }
+
+    public Number getNumber() {
+        return number;
+    }
 }

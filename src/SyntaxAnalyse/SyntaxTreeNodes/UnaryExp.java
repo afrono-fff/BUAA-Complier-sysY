@@ -5,24 +5,27 @@ import SymbolTable.FuncSymbol;
 import SymbolTable.Symbol;
 import SyntaxAnalyse.SyntaxAnalyzer;
 
+import java.util.ArrayList;
+
 public class UnaryExp {
-    // UnaryExp → PrimaryExp | Ident '(' [FuncRParams] ')' | UnaryOp UnaryExp
+    // UnaryExp → PrimaryExp | Ident '(' [FuncRParams] ')' | UnaryOp UnaryExp  // primary | call | signed
     private PrimaryExp primaryExp;
     Word ident;
     private FuncRParams funcRParams;
     private UnaryOp unaryOp;
     private UnaryExp unaryExp;
+    private String unaryExpType; // primary  call  signed
     public UnaryExp(PrimaryExp primaryExp){ // 选择左边
         this.primaryExp = primaryExp;
         this.ident = null;
-        this.funcRParams = null;
+        this.funcRParams = new FuncRParams(new ArrayList<>());
         this.unaryOp = null;
         this.unaryExp = null;
     }
     public UnaryExp(Word ident){ // 选择中间且不选FuncRParams
         this.ident = ident;
         this.primaryExp = null;
-        this.funcRParams = null;
+        this.funcRParams = new FuncRParams(new ArrayList<>());
         this.unaryOp = null;
         this.unaryExp = null;
     }
@@ -36,7 +39,7 @@ public class UnaryExp {
     public UnaryExp(UnaryOp unaryOp, UnaryExp unaryExp){ // 选择右边
         this.primaryExp = null;
         this.ident = null;
-        this.funcRParams = null;
+        this.funcRParams = new FuncRParams(new ArrayList<>());
         this.unaryOp = unaryOp;
         this.unaryExp = unaryExp;
     }
@@ -64,5 +67,33 @@ public class UnaryExp {
             return unaryExp.getDimension(); // 递归
         }
         return -1;
+    }
+
+    public String getUnaryExpType() {
+        return unaryExpType;
+    }
+
+    public void setUnaryExpType(String unaryExpType) {
+        this.unaryExpType = unaryExpType;
+    }
+
+    public PrimaryExp getPrimaryExp() {
+        return primaryExp;
+    }
+
+    public UnaryOp getUnaryOp() {
+        return unaryOp;
+    }
+
+    public UnaryExp getUnaryExp() {
+        return unaryExp;
+    }
+
+    public FuncRParams getFuncRParams() {
+        return funcRParams;
+    }
+
+    public Word getIdent() {
+        return ident;
     }
 }

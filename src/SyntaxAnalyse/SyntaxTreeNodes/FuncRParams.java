@@ -8,6 +8,11 @@ public class FuncRParams {
     public FuncRParams(ArrayList<Exp> expList){
         this.expList = expList;
     }
+
+    public ArrayList<Exp> getExpList() {
+        return expList;
+    }
+
     public void printSyntax(){
         System.out.println("<FuncRParams>");
     }

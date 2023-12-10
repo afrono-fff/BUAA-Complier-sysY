@@ -11,5 +11,13 @@ public class Decl {
         this.varDecl = varDecl;
         this.constDecl = null;
     }
+
+    public ConstDecl getConstDecl() {
+        return constDecl;
+    }
+
+    public VarDecl getVarDecl() {
+        return varDecl;
+    }
     // Decl不输出语法成分
 }

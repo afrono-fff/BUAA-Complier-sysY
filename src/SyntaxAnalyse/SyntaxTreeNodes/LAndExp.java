@@ -9,6 +9,11 @@ public class LAndExp {
     public LAndExp(ArrayList<EqExp> eqExpList){
         this.eqExpList = eqExpList;
     }
+
+    public ArrayList<EqExp> getEqExpList() {
+        return eqExpList;
+    }
+
     public void printSyntax(){
         System.out.println("<LAndExp>");
     }

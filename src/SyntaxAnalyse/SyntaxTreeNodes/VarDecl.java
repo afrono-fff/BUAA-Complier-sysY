@@ -9,6 +9,11 @@ public class VarDecl {
         this.bType = bType;
         this.varDefList = varDefList;
     }
+
+    public ArrayList<VarDef> getVarDefList() {
+        return varDefList;
+    }
+
     public void printSyntax(){
         System.out.println("<VarDecl>");
     }

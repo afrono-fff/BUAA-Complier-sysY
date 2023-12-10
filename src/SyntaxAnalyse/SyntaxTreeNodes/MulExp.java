@@ -6,8 +6,10 @@ public class MulExp {
     // MulExp → UnaryExp | MulExp ('*' | '/' | '%') UnaryExp
     // 消除左递归：MulExp → UnaryExp { ('*' | '/' | '%') UnaryExp }
     private ArrayList<UnaryExp> unaryExpList;
-    public MulExp(ArrayList<UnaryExp> unaryExpList){
+    private ArrayList<String> opList;
+    public MulExp(ArrayList<UnaryExp> unaryExpList, ArrayList<String> opList){
         this.unaryExpList = unaryExpList;
+        this.opList = opList;
     }
     public void printSyntax(){
         System.out.println("<MulExp>");
@@ -23,5 +25,13 @@ public class MulExp {
             }
         }
         return dimension;
+    }
+
+    public ArrayList<UnaryExp> getUnaryExpList() {
+        return unaryExpList;
+    }
+
+    public ArrayList<String> getOpList() {
+        return opList;
     }
 }

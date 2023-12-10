@@ -36,4 +36,12 @@ public class IOInterface {
         fw.flush();
         fw.close();
     }
+    public static boolean checkError() throws IOException {
+        File error = new File("error.txt");
+        if(error.length() != 0){
+            System.out.println("check errors in error.txt.");
+            return false;
+        }
+        return true;
+    }
 }

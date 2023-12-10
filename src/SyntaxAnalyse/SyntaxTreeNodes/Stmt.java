@@ -6,16 +6,16 @@ import java.text.Format;
 import java.util.ArrayList;
 
 public class Stmt {
-    /* Stmt → LVal '=' Exp ';'
-            | [Exp] ';'
-            | Block
-            | 'if' '(' Cond ')' Stmt [ 'else' Stmt ]
-            | 'for' '(' [ForStmt] ';' [Cond] ';' [ForStmt] ')' Stmt
-            | 'break' ';'
-            | 'continue' ';'
-            | 'return' [Exp] ';'
-            | LVal '=' 'getint''('')'';'
-            | 'printf''('FormatString{','Exp}')'';'
+    /* Stmt → LVal '=' Exp ';' // assign
+            | [Exp] ';' // exp
+            | Block // block
+            | 'if' '(' Cond ')' Stmt [ 'else' Stmt ] // branchWithElse branchWithoutElse
+            | 'for' '(' [ForStmt] ';' [Cond] ';' [ForStmt] ')' Stmt // loop
+            | 'break' ';' // break
+            | 'continue' ';' // continue
+            | 'return' [Exp] ';' // returnVoid returnWithExp
+            | LVal '=' 'getint''('')'';' // assign_getint
+            | 'printf''('FormatString{','Exp}')'';' // printf
      */
     private LVal lVal;
     private Exp exp;
@@ -28,6 +28,7 @@ public class Stmt {
     private Word forTerminal;
     private Word formatString;
     private ArrayList<Exp> expList;
+    private String stmtType;
 
     //错误处理g使用:
     private boolean isReturn;
@@ -83,5 +84,55 @@ public class Stmt {
     }
     public void printSyntax(){
         System.out.println("<Stmt>");
+    }
+    public void setStmtType(String stmtType){
+        this.stmtType = stmtType;
+    }
+    public String getStmtType(){
+        return stmtType;
+    }
+
+    public Stmt getStmt() {
+        return stmt;
+    }
+
+    public ArrayList<Exp> getExpList() {
+        return expList;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public ForStmt getForStmt1() {
+        return forStmt1;
+    }
+
+    public ForStmt getForStmt2() {
+        return forStmt2;
+    }
+
+    public Cond getCond() {
+        return cond;
+    }
+
+    public Exp getExp() {
+        return exp;
+    }
+
+    public Stmt getElseStmt() {
+        return elseStmt;
+    }
+
+    public LVal getlVal() {
+        return lVal;
+    }
+
+    public Word getFormatString() {
+        return formatString;
+    }
+
+    public Word getForTerminal() {
+        return forTerminal;
     }
 }

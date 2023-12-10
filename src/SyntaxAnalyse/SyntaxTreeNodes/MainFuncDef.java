@@ -10,4 +10,7 @@ public class MainFuncDef {
     public void printSyntax(){
         System.out.println("<MainFuncDef>");
     }
+    public Block getBlock(){
+        return this.block;
+    }
 }
