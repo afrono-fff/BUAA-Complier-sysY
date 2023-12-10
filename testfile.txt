@@ -1,9 +1,6 @@
-void c(){return 1;int a = 1;}
-void d(int a){
-    return 0;
-}
+int main(){
+    if(1&&2||2&&3){
 
-
-int main() {
+    }
     return 0;
 }
